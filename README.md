@@ -23,4 +23,4 @@ types of image artifacts.
   - `utils.py` contains simple helper functions to make the rest of the project easier to work with
   
 # Dependencies
-Our project depends on `python3`, `numpy`, `matplotlib.pyplot`, `notebook`, `opencv-python`, `tenserflow`, 
+Our project depends on `python3`, `numpy`, `matplotlib.pyplot`, `notebook`, `opencv-python`, `tenserflow >= 2.0.0`, `scipy.ndimage`
