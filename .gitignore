@@ -1,0 +1,6 @@
+**/__pycache__/
+**/.ipynb_checkpoints/
+
+Project\ 1/Dataset/*
+project\ 2/Dataset/*
+**/.DS_Store
