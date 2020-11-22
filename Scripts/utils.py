@@ -3,6 +3,7 @@ import os
 import cv2
 import numpy as np
 from scipy import ndimage
+from scipy.spatial import distance
 
 
 def get_dataset_from_folders(images_path, masks_path, images_shape, n_patches_per_image=6):
@@ -49,3 +50,6 @@ def get_number_cells(images, total=True):
         n_cells_images = sum(n_cells_images)
     
     return n_cells_images
+
+def compute_jaccard_index(im1, im2):
+    return distance.jaccard(im1, im2)
