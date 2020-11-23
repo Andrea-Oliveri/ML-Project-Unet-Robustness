@@ -3,7 +3,7 @@ import os
 import cv2
 import numpy as np
 from scipy import ndimage
-from scipy.spatial import distance
+from sklearn.metrics import jaccard_score
 
 
 def get_dataset_from_folders(images_path, masks_path, images_shape, n_patches_per_image=6):
@@ -52,4 +52,4 @@ def get_number_cells(images, total=True):
     return n_cells_images
 
 def compute_jaccard_index(im1, im2):
-    return distance.jaccard(im1, im2)
+    return jaccard_score(im1, im2)
