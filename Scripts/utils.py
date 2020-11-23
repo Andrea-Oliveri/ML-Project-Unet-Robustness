@@ -2,8 +2,6 @@
 import os
 import cv2
 import numpy as np
-from scipy import ndimage
-from sklearn.metrics import jaccard_score
 
 
 def get_dataset_from_folders(images_path, masks_path, images_shape, n_patches_per_image=6):
@@ -43,13 +41,25 @@ def get_binary_predictions(images, model):
 def get_number_cells(images, total=True):
     n_cells_images = []
     for image in images:
-        _, n_cells = ndimage.label(image)
+        n_cells, _ = cv2.connectedComponents(image)
         n_cells_images.append(n_cells)
        
     if total:
-        n_cells_images = sum(n_cells_images)
-    
-    return n_cells_images
+        return sum(n_cells_images)
+        
+    return np.array(n_cells_images)
 
-def compute_jaccard_index(im1, im2):
-    return jaccard_score(im1, im2)
+def compute_jaccard_score(predictions, masks, total=True):
+    n_images = predictions.shape[0]
+    jaccard_images = np.zeros(n_images)
+    
+    for i in range(n_images):
+        numerator = np.sum(np.logical_and(predictions[i], masks[i]))
+        denominator = np.sum(np.logical_or(predictions[i], masks[i]))
+        if denominator: 
+            jaccard_images[i] = numerator/denominator
+            
+    if total:
+        return np.mean(jaccard_images)
+        
+    return np.array(jaccard_images)
