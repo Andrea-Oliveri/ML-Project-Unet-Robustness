@@ -3,14 +3,14 @@ import cv2
 import numpy as np
 
 
-def generate_gaussian2D(img_shape, sigma_x, sigma_y):
+def generate_gaussian2D(img_shape, sigma_x, sigma_y, mu_x, mu_y):
     """
     
     """
     pixels_range = range(-img_shape[0]//2, img_shape[1]//2)
     x, y = np.meshgrid(pixels_range, pixels_range)
-    gaussian_x = np.exp(- x**2 / (2 * sigma_x**2))
-    gaussian_y = np.exp(- y**2 / (2 * sigma_y**2))
+    gaussian_x = np.exp(- (x - mu_x)**2 / (2 * sigma_x**2))
+    gaussian_y = np.exp(- (y - mu_y)**2 / (2 * sigma_y**2))
     gaussian = gaussian_x * gaussian_y
     
     return gaussian.reshape(img_shape)
@@ -23,7 +23,7 @@ def normalize_bits(img, nb_bits=1):
     return (2**nb_bits - 1)*(img-np.min(img))/(np.max(img)-np.min(img))
 
 
-def add_gaussian(img, amplitude, sigmaX=None, sigmaY=None, nb_bits=8):
+def add_gaussian(img, amplitude, sigmaX=None, sigmaY=None, mu_x=None, mu_y=None, nb_bits=8):
     """
 
     """
@@ -31,8 +31,12 @@ def add_gaussian(img, amplitude, sigmaX=None, sigmaY=None, nb_bits=8):
         sigmaX = (img.shape[0])/5
     if(sigmaY == None):
         sigmaY = (img.shape[1])/5
+    if(mu_x == None):
+        mu_x = np.random.randint(-img.shape[0] // 2, img.shape[0] // 2)
+    if(mu_y == None):
+        mu_y = np.random.randint(-img.shape[1] // 2, img.shape[1] // 2)
         
-    gaussian = generate_gaussian2D(img.shape, sigmaX, sigmaY)
+    gaussian = generate_gaussian2D(img.shape, sigmaX, sigmaY, mu_x, mu_y)
     new_img = gaussian * amplitude + img
     
     return normalize_bits(new_img, nb_bits)
