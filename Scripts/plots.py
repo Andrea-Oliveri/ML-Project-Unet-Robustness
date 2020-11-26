@@ -30,25 +30,55 @@ def show_image_pred(image, model):
     show_image_mask(image, pred.squeeze())
     
 
-def plot_all(x, accuracies, jaccard_scores, number_cells_predictions, number_cells_masks):
+def plot_all(results, parameter_name):
     """
     
     """
+    parameter  = []
+    accuracies = []
+    jaccards   = []
+    precisions = []
+    recalls    = []
+    number_cells_predictions = []
+    number_cells_masks       = []
+    
+    for parameter_value, measures in results.items():
+        parameter .append(parameter_value)
+        accuracies.append(measures["accuracy"])
+        jaccards  .append(measures["jaccard"])
+        precisions.append(measures["precision"])
+        recalls   .append(measures["recall"])
+        number_cells_predictions.append(measures["number_cells_predictions"])
+        number_cells_masks      .append(measures["number_cells_masks"])
+
     plt.figure()
     plt.title("Accuracy")
-    plt.plot(x, accuracies)
+    plt.xlabel(parameter_name)
+    plt.ylabel("Accuracy")
+    plt.plot(parameter, accuracies)
     plt.grid()
     
     plt.figure()
     plt.title("Jaccard Score")
-    plt.plot(x, jaccard_scores)
+    plt.xlabel(parameter_name)
+    plt.ylabel("Jaccard Score")
+    plt.plot(parameter, jaccards)
     plt.grid()
     
     plt.figure()
     plt.title("Number of cells detected")
-    plt.plot(x, number_cells_predictions)
-    if isinstance(number_cells_masks, int):
-        plt.hlines(number_cells_masks, min(x), max(x), color='orange', linestyle='--')
-    else:    
-        plt.plot(x, number_cells_masks, color='orange', linestyle='--')
+    plt.xlabel(parameter_name)
+    plt.ylabel("Number of cells detected")
+    plt.plot(parameter, number_cells_predictions)
+    plt.plot(parameter, number_cells_masks, color='orange', linestyle='--')
+    plt.legend(["Cells in Predictions", "Cells in Masks"])
+    plt.grid()
+    
+    plt.figure()
+    plt.title("Precision-Recall Curve")
+    plt.xlabel("Recall")
+    plt.ylabel("Precision")
+    plt.xlim((0,1))
+    plt.ylim((0,1))
+    plt.plot(recalls, precisions)
     plt.grid()

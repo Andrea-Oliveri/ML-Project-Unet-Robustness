@@ -37,6 +37,7 @@ def split_images_and_masks_into_patches(images, masks, patch_shape=(256, 256, 1)
 def get_binary_predictions(images, model):
     pred = model.predict(images, batch_size=1)
     return np.rint(pred).astype(np.uint8)
+
           
 def get_number_cells(images, total=True):
     n_cells_images = []
@@ -49,7 +50,8 @@ def get_number_cells(images, total=True):
         
     return np.array(n_cells_images)
 
-def compute_jaccard_score(predictions, masks, total=True):
+
+def compute_jaccard_score(predictions, masks):
     n_images = predictions.shape[0]
     jaccard_images = np.zeros(n_images)
     
@@ -59,7 +61,25 @@ def compute_jaccard_score(predictions, masks, total=True):
         if denominator: 
             jaccard_images[i] = numerator/denominator
             
-    if total:
-        return np.mean(jaccard_images)
+    return np.mean(jaccard_images)
+
+
+def compute_precision_recall(predictions, masks):
+    n_images = predictions.shape[0]
+    precision = np.zeros(n_images)
+    recall = np.zeros(n_images)
+    
+    for i in range(n_images):
+        true_positives  = np.sum(np.logical_and(predictions[i]==1, masks[i]==1))
+        false_positives = np.sum(np.logical_and(predictions[i]==1, masks[i]==0))
+        false_negatives = np.sum(np.logical_and(predictions[i]==0, masks[i]==1))        
         
-    return np.array(jaccard_images)
+        denominator_precision = true_positives + false_positives
+        if denominator_precision:
+            precision[i] = true_positives / denominator_precision
+        
+        denominator_recall = true_positives + false_negatives
+        if denominator_recall:
+            recall[i] = true_positives / denominator_recall
+         
+    return np.mean(precision), np.mean(recall)

@@ -16,7 +16,7 @@ def generate_gaussian2D(img_shape, sigma_x, sigma_y, mu_x, mu_y):
     return gaussian.reshape(img_shape)
 
 
-def normalize_bits(img, nb_bits=1):
+def normalize(img, nb_bits=1):
     """
     Par default, normalise entre 0 et 1, mais si nb_bits>1 specified, it scales it to max representable by an unsigned of length nb_bits
     """
@@ -41,12 +41,12 @@ def add_gaussian(img, amplitude, sigmaX=None, sigmaY=None, mu_x=None, mu_y=None,
     gaussian = generate_gaussian2D(img.shape, sigmaX, sigmaY, mu_x, mu_y)
     new_img = gaussian * amplitude + img
     
-    return normalize_bits(new_img, nb_bits)
+    return normalize(new_img, nb_bits)
 
 
 def add_gaussian_noise(img, mean, std, nb_bits=8):
     gaussian = np.random.normal(mean, std, img.shape)
-    output = normalize_bits(img + gaussian, nb_bits)
+    output = normalize(img + gaussian, nb_bits)
     return output
 
 
@@ -58,17 +58,17 @@ def zoom_image(img, zoom_factor, val_padding=None):
         raise ValueError("The zoom factor must be strictly positive")
     
     elif zoom_factor == 1:
-        return img
+        output = img
     
     elif zoom_factor > 1:
         # Resize
         new_img = cv2.resize(img, None, fx=zoom_factor, fy=zoom_factor, interpolation=cv2.INTER_CUBIC)
         
-        # Crop desired central portion
+        # Crop random portion of correct size
         height, width, _      = img.shape
         new_height, new_width = new_img.shape
         line_start = (new_height - height) // 2
-        col_start  = (new_width  - width ) // 2
+        col_start  = (new_width - width) // 2
         line_end   = line_start + height
         col_end    = col_start  + width
         output = new_img[line_start:line_end, col_start:col_end]
