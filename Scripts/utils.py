@@ -4,9 +4,13 @@ import cv2
 import numpy as np
 
 
-def get_dataset_from_folders(images_path, masks_path, images_shape, n_patches_per_image=6):
+def get_dataset_from_folders(images_path, masks_path, images_shape=None, n_patches_per_image=6):
     images = read_images_from_folder(images_path)
     masks = read_images_from_folder(masks_path)
+    
+    if images_shape is None:
+        return np.array(images), np.array(masks)
+    
     return split_images_and_masks_into_patches(images, masks, images_shape, n_patches_per_image)
 
 

@@ -59,35 +59,40 @@ def zoom_image(img, zoom_factor, val_padding=None):
     
     elif zoom_factor == 1:
         output = img
+        
+    else:
+        # Resize
+        new_img = cv2.resize(img, None, fx=zoom_factor, fy=zoom_factor, interpolation=cv2.INTER_CUBIC)
+        
+        height, width, _      = img.shape
+        new_height, new_width = new_img.shape
     
-    elif zoom_factor > 1:
-        # Resize
-        new_img = cv2.resize(img, None, fx=zoom_factor, fy=zoom_factor, interpolation=cv2.INTER_CUBIC)
-        
-        # Crop random portion of correct size
-        height, width, _      = img.shape
-        new_height, new_width = new_img.shape
-        line_start = (new_height - height) // 2
-        col_start  = (new_width - width) // 2
-        line_end   = line_start + height
-        col_end    = col_start  + width
-        output = new_img[line_start:line_end, col_start:col_end]
-        
-    elif zoom_factor < 1:
-        # Resize
-        new_img = cv2.resize(img, None, fx=zoom_factor, fy=zoom_factor, interpolation=cv2.INTER_CUBIC)
-        
-        if val_padding == None:
-            val_padding = img.min()
-        
-        # Padding with val_padding
-        height, width, _      = img.shape
-        new_height, new_width = new_img.shape
-        pad_up    = (height - new_height) // 2
-        pad_down  = height - pad_up - new_height
-        pad_left  = (width - new_width) // 2
-        pad_right = width - pad_left - new_width
-        
-        output = np.pad(new_img, ((pad_up, pad_down), (pad_left, pad_right)), 'constant', constant_values = val_padding)
+        if zoom_factor > 1:
+            # Crop central portion of correct size
+            line_start = (new_height - height) // 2
+            col_start  = (new_width - width) // 2
+            line_end   = line_start + height
+            col_end    = col_start  + width
+
+            output = new_img[line_start:line_end, col_start:col_end]
+
+        elif zoom_factor < 1:  
+            if val_padding == None:
+                val_padding = img.min()
+
+            # Padding with val_padding
+            pad_up    = (height - new_height) // 2
+            pad_down  = height - pad_up - new_height
+            pad_left  = (width - new_width) // 2
+            pad_right = width - pad_left - new_width
+
+            output = np.pad(new_img, ((pad_up, pad_down), (pad_left, pad_right)), 'constant', constant_values = val_padding)
 
     return output.reshape(img.shape)
+
+
+def zoom_image_to_meet_shape(img, shape):
+    """
+
+    """
+    return cv2.resize(img, (shape[0], shape[1]), interpolation=cv2.INTER_CUBIC).reshape(shape)
