@@ -81,4 +81,8 @@ def plot_all(results, parameter_name):
     plt.xlim((0,1))
     plt.ylim((0,1))
     plt.plot(recalls, precisions)
+    plt.scatter(recalls[0], precisions[0], color='orange', marker='o')
+    plt.annotate(parameter[0], (recalls[0], precisions[0]), fontsize=12)
+    plt.scatter(recalls[-1], precisions[-1], color='orange', marker='o')
+    plt.annotate(parameter[-1], (recalls[-1], precisions[-1]), fontsize=12)
     plt.grid()

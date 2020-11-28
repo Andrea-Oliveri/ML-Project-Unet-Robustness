@@ -44,8 +44,8 @@ def add_gaussian(img, amplitude, sigmaX=None, sigmaY=None, mu_x=None, mu_y=None,
     return normalize(new_img, nb_bits)
 
 
-def add_gaussian_noise(img, mean, std, nb_bits=8):
-    gaussian = np.random.normal(mean, std, img.shape)
+def add_gaussian_noise(img, mean, sigma, nb_bits=8):
+    gaussian = np.random.normal(mean, sigma, img.shape)
     output = normalize(img + gaussian, nb_bits)
     return output
 
