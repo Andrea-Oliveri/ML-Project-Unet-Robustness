@@ -26,4 +26,4 @@ def dog(image, sigma_low, sigma_high=None):
     
     output = gauss_low - gauss_high
     
-    return normalize(output, nb_bits=8)
+    return normalize(output)
