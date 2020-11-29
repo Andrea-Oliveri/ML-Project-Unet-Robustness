@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import cv2
 import numpy as np
+from image_processing_methods import normalize
 
 
 def generate_gaussian2D(img_shape, sigma_x, sigma_y, mu_x, mu_y):
@@ -16,26 +17,17 @@ def generate_gaussian2D(img_shape, sigma_x, sigma_y, mu_x, mu_y):
     return gaussian.reshape(img_shape)
 
 
-def normalize(img, nb_bits=1):
-    """
-    Par default, normalise entre 0 et 1, mais si nb_bits>1 specified, it scales it to max representable by an unsigned of length nb_bits
-    """
-    min_val = np.min(img)
-    max_val = np.max(img)
-    return (2**nb_bits-1)*(img-min_val)/(max_val-min_val)
-
-
 def add_gaussian(img, amplitude, sigmaX=None, sigmaY=None, mu_x=None, mu_y=None, nb_bits=8):
     """
 
     """
-    if(sigmaX == None):
+    if sigmaX is None:
         sigmaX = (img.shape[0])/5
-    if(sigmaY == None):
+    if sigmaY is None:
         sigmaY = (img.shape[1])/5
-    if(mu_x == None):
+    if mu_x is None:
         mu_x = np.random.randint(-img.shape[0] // 2, img.shape[0] // 2)
-    if(mu_y == None):
+    if mu_y is None:
         mu_y = np.random.randint(-img.shape[1] // 2, img.shape[1] // 2)
         
     gaussian = generate_gaussian2D(img.shape, sigmaX, sigmaY, mu_x, mu_y)
@@ -77,7 +69,7 @@ def zoom_image(img, zoom_factor, val_padding=None):
             output = new_img[line_start:line_end, col_start:col_end]
 
         elif zoom_factor < 1:  
-            if val_padding == None:
+            if val_padding is None:
                 val_padding = img.min()
 
             # Padding with val_padding

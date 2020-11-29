@@ -1,32 +1,29 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+import cv2
 
 
-def normalizeExpansion(img):
+def normalize(img, nb_bits=1):
+    """Par default, normalise entre 0 et 1, mais si nb_bits>1 specified, it scales it to max representable 
+       by an unsigned of length nb_bits
+       
+    """
+    min_val = np.min(img)
+    max_val = np.max(img)
+    return (2**nb_bits-1)*(img-min_val)/(max_val-min_val)
+
+
+def dog(image, sigma_low, sigma_high=None):
     """
     
 
     """
-    # Declare the output image
-    output = np.copy(img)
+    if sigma_high is None:
+        sigma_high = np.sqrt(2)*sigma_low
+        
+    gauss_low = cv2.GaussianBlur(image, ksize=(0,0), sigmaX=sigma_low, sigmaY=sigma_low)
+    gauss_high = cv2.GaussianBlur(image, ksize=(0,0), sigmaX=sigma_high, sigmaY=sigma_high)
     
-    output = (img-np.min(img))/(np.max(img)-np.min(img))
+    output = gauss_low - gauss_high
     
-    # Return the output image
-    return output
-
-def dog(image, sigma_1):
-    """
-    
-
-    """
-    output = np.copy(image)
-    #gauss1 = skimage.filters.gaussian(output, sigma = sigma_1, preserve_range = True)
-    
-    sigma_2 = np.sqrt(2)*sigma_1
-    #gauss2 = skimage.filters.gaussian(output, sigma = sigma_2, preserve_range = True)
-    
-    #output = gauss1 - gauss2
-    output = normalizeExpansion(output)
-    
-    return output
+    return normalize(output, nb_bits=8)
