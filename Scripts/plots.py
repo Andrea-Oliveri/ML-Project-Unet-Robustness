@@ -3,6 +3,24 @@ import matplotlib.pyplot as plt
 from utils import get_binary_predictions
 
 
+def plot_history(history):
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
+    plt.title('Model Accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Validation'])
+    plt.show()
+
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('Model Loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Validation'])
+    plt.show()
+    
+    
 def show_image_mask(image, mask):
     """Show.
     
@@ -30,7 +48,7 @@ def show_image_pred(image, model):
     show_image_mask(image, pred.squeeze())
     
 
-def plot_all(results, parameter_name):
+def plot_results(results, parameter_name):
     """
     
     """

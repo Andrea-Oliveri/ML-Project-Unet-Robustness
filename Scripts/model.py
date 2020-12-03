@@ -3,7 +3,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, Dropout, AveragePooling2D, Conv2DTranspose, Concatenate
 
 
-def unet(input_shape=(256, 256, 1)):
+def unet(input_shape=(256, 256, 1), show_summary=True):
     inputs         = Input(input_shape)
     
     layers_block_1 = Conv2D(filters = 16, kernel_size = 3, activation = 'elu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
@@ -49,6 +49,7 @@ def unet(input_shape=(256, 256, 1)):
 
     model.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     
-    model.summary()
+    if show_summary:
+        model.summary()
     
     return model
