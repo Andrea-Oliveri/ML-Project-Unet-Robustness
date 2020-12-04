@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from distortions import add_gaussian, add_gaussian_noise
 
 
-def make_train_generator(train_images, train_masks, batch_size=1, custom_distortions=False, seed=300):
+def make_train_generator(train_images, train_masks, batch_size=1, custom_distortions=False, seed=2):
     """
     
     """
