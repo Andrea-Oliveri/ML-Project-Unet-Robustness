@@ -38,6 +38,16 @@ def split_images_and_masks_into_patches(images, masks, patch_shape=(256, 256, 1)
     return np.array(patches_images), np.array(patches_masks)
 
 
+def normalize(img, nb_bits=1):
+    """Par default, normalise entre 0 et 1, mais si nb_bits>1 specified, it scales it to max representable 
+       by an unsigned of length nb_bits
+       
+    """
+    min_val = np.min(img)
+    max_val = np.max(img)
+    return (2**nb_bits-1)*(img-min_val)/(max_val-min_val)
+
+
 def get_binary_predictions(images, model):
     pred = model.predict(images, batch_size=1)
     return np.rint(pred).astype(np.uint8)

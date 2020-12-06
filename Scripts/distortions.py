@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import cv2
 import numpy as np
-from image_processing_methods import normalize
+from utils import normalize
 
 
 def generate_gaussian2D(img_shape, sigma_x, sigma_y, mu_x, mu_y):
