@@ -3,21 +3,21 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, Dropout, AveragePooling2D, Conv2DTranspose, Concatenate
 
 
-def unet(input_shape=(256, 256, 1), show_summary=True):
-        """
-        Returns an instance of a tensorflow.keras model implementing a UNET architecture.
-        
-        Args:
-            input_shape::[tuple]
-                The shape of the input layer.
-            show_summary::[bool]
-                if true, a summary showing the different layers in the model is printed.
-                
-        Returns:
-            model::[tensorflow.keras model]
-                Instance of tensorflow.keras model implementing a Unet architecture.
+def Unet(input_shape=(256, 256, 1), show_summary=True):
+    """
+    Returns an instance of a tensorflow.keras model implementing a UNET architecture.
 
-        """
+    Args:
+        input_shape::[tuple]
+            The shape of the input layer.
+        show_summary::[bool]
+            if true, a summary showing the different layers in the model is printed.
+
+    Returns:
+        model::[tensorflow.keras model]
+            Instance of tensorflow.keras model implementing a Unet architecture.
+
+    """
     inputs         = Input(input_shape)
     
     layers_block_1 = Conv2D(filters = 16, kernel_size = 3, activation = 'elu',

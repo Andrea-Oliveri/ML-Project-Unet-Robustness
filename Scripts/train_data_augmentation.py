@@ -7,14 +7,14 @@ from distortions import add_gaussian, add_gaussian_noise
 
 def make_train_generator(train_images, train_masks, batch_size=1, custom_distortions=False, seed=2):
     """
-    
-    ---------------------------------------------------------- TODO ----------------------------------------------------------
+    Function returning a generator of batches of images and their corresponding masks. Random data augmentation is applied
+    to the images and, if needed, the masks are also changed in the same way to guarantee coherence with images. 
     
     Args:
         train_images::[np.array]
             Numpy array of shape (n_images, n_lines, n_columns, n_channels) containing the training images.
         train_masks::[np.array]
-            Numpy array of same shape as train_images containing the training masks.
+            Numpy array of same shape as train_images containing the corresponding training masks.
         batch_size::[int]
             The number of images returned for each iteration on the generator.
         custom_distortion::[bool]
@@ -25,7 +25,8 @@ def make_train_generator(train_images, train_masks, batch_size=1, custom_distort
             images and masks.
     Returns:
         train_generator::[generator]
-            ------------------- TODO ---------------------------------------------
+            Generator that, for every iteration, returns a tuple of (images, masks) where images and masks are np.array
+            of size (batch_size, n_lines, n_columns, n_channels).
 
     """
     if custom_distortions:

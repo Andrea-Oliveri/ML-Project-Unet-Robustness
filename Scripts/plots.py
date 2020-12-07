@@ -2,10 +2,18 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
-from utils import get_binary_predictions
+from utils import get_binary_predictions, read_results
 
 
 def plot_history(history):
+    """
+    Plots the evolution of accuracy and loss over the epochs as collected in history dictionary.
+    
+    Args:
+        history::[dict]
+            Dictionary of form {metric: metric_val_list, ...}
+            
+    """
     plt.plot(history.history['accuracy'])
     plt.plot(history.history['val_accuracy'])
     plt.title('Model Accuracy')
@@ -24,14 +32,15 @@ def plot_history(history):
     
     
 def show_image_mask(image, mask):
-    """Show.
+    """
+    Shows the image and true mask in a row of subplots.
     
     Args:
         image::[np.array]
-            The output measures associated to the input measures tX.
+            Numpy array containing one image of shape (n_lines, n_columns, n_channels).
         mask::[np.array]
-            The input measures.
-            
+            Numpy array of same shape as image containing its true mask. 
+                   
     """
     fig, axes = plt.subplots(1, 2)
     ax_image, ax_mask = axes
@@ -46,7 +55,14 @@ def show_image_mask(image, mask):
     
 def show_image_pred(image, models):
     """
+    Shows the image and predictions of each model for that image in a row of subplots.
     
+    Args:
+        image::[np.array]
+            Numpy array containing one image of shape (n_lines, n_columns, n_channels).
+        models::[dict]
+            Dictionary of form {model_name: model_object, ...}
+                   
     """
     n_models = len(models)
     
@@ -67,9 +83,21 @@ def show_image_pred(image, models):
     plt.show()
     
     
-def plot_results(results, parameter_name, model_keys):
+def plot_results(results, model_keys, parameter_name, parameter_values_to_annotate=[]):
     """
+    Plots the accuracy, jaccard score, number of cells detected and precision-recall curves for each model as collected
+    in the results argument. 
     
+    Args:
+        results::[dict]
+            Dictionary of form {parameter_value: {model_name: {metric_name: metric_val, ...}, ...}, ...}
+        model_keys::[dict_keys]
+            Variable collecting the names of the models as used in the keys the results child dictionaries.
+        parameter_name::[string]
+            The name of the parameter that was being tested when collecting result. Only needed to label the x-axis.
+        parameter_values_to_annotate::[list]
+            List of points corresponding to parameter values to be annotated in precision-recall plot.
+            
     """
     parameter, results_models, number_cells_masks = read_results(results, model_keys)
     
@@ -107,33 +135,11 @@ def plot_results(results, parameter_name, model_keys):
     plt.ylabel("Precision")
     plt.xlim((0,1))
     plt.ylim((0,1))
-    for key in model_keys:        
-        line, = plt.plot(results_models[key]["recalls"], results_models[key]["precisions"]    , label=key.capitalize())
-        plt.scatter(results_models[key]["recalls"][0]  , results_models[key]["precisions"][0] , color=line.get_color(), marker='o')
-        plt.scatter(results_models[key]["recalls"][-1] , results_models[key]["precisions"][-1], color=line.get_color(), marker='o')
-        plt.annotate(parameter[0] , (results_models[key]["recalls"][0] , results_models[key]["precisions"][0]) , fontsize=12)
-        plt.annotate(parameter[-1], (results_models[key]["recalls"][-1], results_models[key]["precisions"][-1]), fontsize=12)
+    annotated_points_idx = np.unique([np.abs(np.array(parameter)-value).argmin() for value in parameter_values_to_annotate])
+    for key in model_keys:
+        line, = plt.plot(results_models[key]["recalls"], results_models[key]["precisions"], label=key.capitalize())
+        for idx in annotated_points_idx:
+            plt.scatter( results_models[key]["recalls"][idx], results_models[key]["precisions"][idx], color=line.get_color(), marker='x')
+            plt.annotate(parameter[idx], (results_models[key]["recalls"][idx], results_models[key]["precisions"][idx]) , fontsize=10)
     plt.legend()
     plt.grid()
-    
-    
-def read_results(results, model_keys):
-    parameter          = []
-    number_cells_masks = []
-    results_models     = {}
-    
-    for key in model_keys:
-        results_models[key] = {"accuracies": [], "jaccards": [], "precisions": [], "recalls": [], "number_cells_predictions": []}
- 
-    for parameter_value, measures in results.items():
-        parameter.append(parameter_value)
-        number_cells_masks.append(measures[list(model_keys)[0]]["number_cells_masks"])
-
-        for key in model_keys:
-            results_models[key]["accuracies"].append( measures[key]["accuracy"] )
-            results_models[key]["jaccards"]  .append( measures[key]["jaccard"] )
-            results_models[key]["precisions"].append( measures[key]["precision"] )
-            results_models[key]["recalls"]   .append( measures[key]["recall"] )
-            results_models[key]["number_cells_predictions"].append( measures[key]["number_cells_predictions"] )     
-        
-    return parameter, results_models, number_cells_masks

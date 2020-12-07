@@ -221,3 +221,42 @@ def compute_precision_recall(predictions, masks):
         denominator_recall = true_positives + false_negatives
         if denominator_recall:
             recall[i] = true_positives / denominator_recall
+     
+    return np.mean(precision), np.mean(recall)
+            
+            
+def read_results(results, model_keys):
+    """
+    Reads the results dictionary passed as parameter and converts it into lists.
+    
+    Args:
+        results::[dict]
+            Dictionary of form {parameter_value: {model_name: {metric_name: metric_val, ...}, ...}, ...}
+        model_keys::[dict_keys]
+            Variable collecting the names of the models as used in the keys the results child dictionaries.
+    
+    Returns:
+        parameter::[list]
+            List of parameter's values.
+        results_models::[dictionary]
+            Dictionary of form {model_name: {metric_name: metric_vals_list}, ...}
+    """
+    parameter          = []
+    number_cells_masks = []
+    results_models     = {}
+    
+    for key in model_keys:
+        results_models[key] = {"accuracies": [], "jaccards": [], "precisions": [], "recalls": [], "number_cells_predictions": []}
+ 
+    for parameter_value, measures in results.items():
+        parameter.append(parameter_value)
+        number_cells_masks.append(measures[list(model_keys)[0]]["number_cells_masks"])
+
+        for key in model_keys:
+            results_models[key]["accuracies"].append( measures[key]["accuracy"] )
+            results_models[key]["jaccards"]  .append( measures[key]["jaccard"] )
+            results_models[key]["precisions"].append( measures[key]["precision"] )
+            results_models[key]["recalls"]   .append( measures[key]["recall"] )
+            results_models[key]["number_cells_predictions"].append( measures[key]["number_cells_predictions"] )     
+        
+    return parameter, results_models, number_cells_masks

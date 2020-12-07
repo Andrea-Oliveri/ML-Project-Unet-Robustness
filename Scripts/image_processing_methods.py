@@ -48,7 +48,7 @@ class ImageProcessingMethod(ABC):
         
         for image in images:
             filtered_image = self.apply_filter(image)
-            _, pred = cv2.threshold(filtered_image, 0, 1, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+            _, pred = cv2.threshold(filtered_image.astype('uint8'), 0, 1, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             predictions.append(pred)
             
         return np.reshape(predictions, images.shape)
