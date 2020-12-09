@@ -109,7 +109,6 @@ def plot_results(results, model_keys, parameter_name, parameter_values_to_annota
         plt.plot(parameter, results_models[key]["accuracies"], label=key.capitalize())
     plt.legend()
     plt.grid()
-    plt.savefig("../res_accuracy_" + parameter_name + ".pdf", dpi=600, bbox_inches="tight")
     
     plt.figure()
     plt.title("Jaccard Score")
@@ -119,7 +118,6 @@ def plot_results(results, model_keys, parameter_name, parameter_values_to_annota
         plt.plot(parameter, results_models[key]["jaccards"], label=key.capitalize())
     plt.legend()
     plt.grid()
-    plt.savefig("../res_jaccard_" + parameter_name + ".pdf", dpi=600, bbox_inches="tight")
     
     plt.figure()
     plt.title("Number of Cells Detected")
@@ -130,7 +128,6 @@ def plot_results(results, model_keys, parameter_name, parameter_values_to_annota
     plt.plot(parameter, number_cells_masks, linestyle='--', label="Masks", )    
     plt.legend()
     plt.grid()
-    plt.savefig("../res_ncells_" + parameter_name + ".pdf", dpi=600, bbox_inches="tight")
     
     plt.figure()
     plt.title("Precision-Recall Curve")
@@ -146,4 +143,3 @@ def plot_results(results, model_keys, parameter_name, parameter_values_to_annota
             plt.annotate(parameter[idx], (results_models[key]["recalls"][idx], results_models[key]["precisions"][idx]) , fontsize=10)
     plt.legend()
     plt.grid()
-    plt.savefig("../res_prec_recall_" + parameter_name + ".pdf", dpi=600, bbox_inches="tight")
