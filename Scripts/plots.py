@@ -139,7 +139,9 @@ def plot_results(results, model_keys, parameter_name, parameter_values_to_annota
     for key in model_keys:
         line, = plt.plot(results_models[key]["recalls"], results_models[key]["precisions"], label=key.capitalize())
         for idx in annotated_points_idx:
-            plt.scatter( results_models[key]["recalls"][idx], results_models[key]["precisions"][idx], color=line.get_color(), marker='x')
-            plt.annotate(parameter[idx], (results_models[key]["recalls"][idx], results_models[key]["precisions"][idx]) , fontsize=10)
+            plt.scatter(results_models[key]["recalls"][idx], results_models[key]["precisions"][idx], color=line.get_color(),
+                        marker='x')
+            plt.annotate(parameter[idx], (results_models[key]["recalls"][idx], results_models[key]["precisions"][idx]),
+                         fontsize=10)
     plt.legend()
     plt.grid()
