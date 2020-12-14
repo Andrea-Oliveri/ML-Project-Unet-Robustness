@@ -46,7 +46,7 @@ class ImageProcessingMethod(ABC):
         """
         predictions = []
         
-        for image in images:
+        for image in images.astype("float"):
             filtered_image = self.apply_filter(image)
             _, pred = cv2.threshold(filtered_image.astype('uint8'), 0, 1, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             predictions.append(pred)
