@@ -1,4 +1,4 @@
-# Image Segmentation of Microscope Images with U-Net - Machine Learning 2020
+# Evaluation of Robustness of U-Net based Models to common Image Artefacts in Segmentation of Microscope Images - Machine Learning 2020
 Authors: Andrea Oliveri, Célina Chkroun, Bernardo Conde
 
 # Introduction
@@ -34,3 +34,7 @@ models to their robustness against multiple types of image artifacts.
 
 # Dependencies
 Our project depends on `python3`, `numpy`, `matplotlib.pyplot`, `notebook`, `opencv-python`, `tenserflow >= 2.1.0`
+
+# Tensting environment
+A .yml file was included in this repository describing the environment used for the training and testing. All tests were run on a
+Windows 10 machine with an Intel Core i7-7700HQ CPU and Nvidia GeForce GTX 1050 GPU.
